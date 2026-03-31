@@ -33,17 +33,17 @@
     },
     {
       "atomType": "Code",
-      "x": 0.642413487133984,
-      "y": 0.5542168674698795,
+      "x": 0.6388642413487134,
+      "y": 0.536144578313253,
       "uniqueID": "id-7",
       "ioValues": [
         {
-          "name": "parts",
+          "name": "partAssembly",
           "ioValue": "__GEOMETRY_INPUT__"
         }
       ],
       "codeVersion": 1,
-      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"parts\", type: \"geometry\", defaultValue: null },\n];\nlet radius = 4\nlet height = 7\n\nlet importedShape = library[parts];\nconsole.log(\"assembly\", importedShape)\nlet importedShapesGeometries =importedShape.geometry\n//traverse through the top level of geometry of the assembly \n\n const partBounds = [];\nawait importedShapesGeometries.forEach(async (item) => {\n  \n  const boundsObj = await GetBounds(item)\n  const bounds = boundsObj; // GetBounds returns AbundanceObject with bounds in geometry\n  if (bounds) {\n      partBounds.push({\n        part: item,\n        bounds: bounds,\n      });\n    }\n})\n\ngenerateSimpleCutList(partBounds, \"table\");\nreturn importedShape\n \n\n\nfunction generateSimpleCutList(partBounds, format) {\n  console.log(\"partBounds\",partBounds)\n  if (format === \"table\") {\n    let table = \"| Part | Dimensions (X x Y x Z) |\\n|------|------------------------|\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const dims = `${bounds[1][0] - bounds[0][0]} x ${bounds[1][1] - bounds[0][1]} x ${bounds[1][2] - bounds[0][2]}`;\n      table += `| Part ${idx + 1} | ${dims} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List:\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const dims = `${bounds[1][0] - bounds[0][0]} x ${bounds[1][1] - bounds[0][1]} x ${bounds[1][2] - bounds[0][2]}`;\n      list += `- Part ${idx + 1}: ${dims}\\n`;\n    });\n    return list;\n  }\n}\n\n"
+      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"partAssembly\", type: \"geometry\", defaultValue: null },\n];\nlet radius = 4\nlet height = 7\n\nlet importedShape = library[partAssembly];\nconsole.log(\"assembly\", importedShape)\nlet parts = importedShape.geometry\n//traverse through the top level of geometry of the assembly \n\nconst partBounds = [];\n  for (let part of parts) {\n    const boundsObj = await GetBounds(part);\n    const bounds = boundsObj // GetBounds returns AbundanceObject with bounds in geometry\n    \n    if (bounds) {\n      partBounds.push({\n        part: part,\n        bounds: bounds,\n      });\n    }\n  }\n\ngenerateSimpleCutList(partBounds, \"table\");\nreturn importedShape\n \n\n\nfunction generateSimpleCutList(partBounds, format) {\n  console.log(\"partBounds\",partBounds)\n  if (format === \"table\") {\n    console.log(\"table\")\n    let table = \"| Part | Dimensions (X x Y x Z) |\\n|------|------------------------|\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      console.log(bounds)\n      const dims = `${bounds[1][0] - bounds[0][0]} x ${bounds[1][1] - bounds[0][1]} x ${bounds[1][2] - bounds[0][2]}`;\n      table += `| Part ${idx + 1} | ${dims} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List:\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const dims = `${bounds[1][0] - bounds[0][0]} x ${bounds[1][1] - bounds[0][1]} x ${bounds[1][2] - bounds[0][2]}`;\n      list += `- Part ${idx + 1}: ${dims}\\n`;\n    });\n    return list;\n  }\n}\n\n"
     },
     {
       "atomType": "Rectangle",
@@ -172,7 +172,7 @@
       "ap2ID": "id-31"
     },
     {
-      "ap2Name": "parts",
+      "ap2Name": "partAssembly",
       "ap1ID": "id-21",
       "ap2ID": "id-7"
     },
