@@ -6,11 +6,7 @@
 
 
 
- Readme text here 
-
-![readme](/readmeid-41.svg?v=nwdjusx)
-
-
+ Readme text here
 
 
 
