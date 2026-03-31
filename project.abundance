@@ -33,28 +33,160 @@
     },
     {
       "atomType": "Code",
-      "x": 0.3236111111111111,
-      "y": 0.5060240963855421,
+      "x": 0.6024844720496894,
+      "y": 0.5813253012048193,
       "uniqueID": "id-7",
       "ioValues": [
         {
-          "name": "shape",
+          "name": "assembly",
           "ioValue": "__GEOMETRY_INPUT__"
-        },
-        {
-          "name": "radius",
-          "ioValue": 5
-        },
-        {
-          "name": "height",
-          "ioValue": 10
         }
       ],
       "codeVersion": 1,
-      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"shape\", type: \"geometry\", defaultValue: null },\n  { inputName: \"radius\", type: \"number\", defaultValue: 5 },\n  { inputName: \"height\", type: \"number\", defaultValue: 10 }\n];\n\nlet importedShape = library[shape];\nlet newPlane = replicad.makePlane()\nlet circDraw = replicad.drawCircle(radius)\nlet sketchCir = circDraw.sketchOnPlane(newPlane)\nlet cyl = sketchCir.extrude(height)\nlet cylObj = {\n  geometry: [cyl],\n  dimension: \"3D\",\n  tags: [\"createdCylinder\"],\n  color: \"#A3CE5B\",\n  plane: null,\n  bom: []\n};\n\nlet assembly = await Assembly([importedShape, cylObj]);\nreturn assembly;\n"
+      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"assembly\", type: \"geometry\", defaultValue: null },\n];\n\nconsole.log(library[assemble])\n\nlet importedShape = library[shape];\nlet newPlane = replicad.makePlane()\nlet circDraw = replicad.drawCircle(radius)\nlet sketchCir = circDraw.sketchOnPlane(newPlane)\nlet cyl = sketchCir.extrude(height)\nlet cylObj = {\n  geometry: [cyl],\n  dimension: \"3D\",\n  tags: [\"createdCylinder\"],\n  color: \"#A3CE5B\",\n  plane: null,\n  bom: []\n};\n\nlet assembly = await Assembly([importedShape, cylObj]);\nreturn assembly;\n"
+    },
+    {
+      "atomType": "Rectangle",
+      "x": 0.21472937000887313,
+      "y": 0.3192771084337349,
+      "uniqueID": "id-13",
+      "ioValues": [
+        {
+          "name": "x length",
+          "ioValue": 50,
+          "currentEquation": "50"
+        },
+        {
+          "name": "y length",
+          "ioValue": 10
+        }
+      ]
+    },
+    {
+      "atomType": "Extrude",
+      "x": 0.3132209405501331,
+      "y": 0.3765060240963855,
+      "uniqueID": "id-17",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "height",
+          "ioValue": 1,
+          "currentEquation": "1"
+        }
+      ]
+    },
+    {
+      "atomType": "Assembly",
+      "x": 0.5359361135758651,
+      "y": 0.3253012048192771,
+      "uniqueID": "id-21",
+      "ioValues": [
+        {
+          "name": "Shape 1",
+          "ioValue": null
+        },
+        {
+          "name": "Shape 2",
+          "ioValue": null
+        },
+        {
+          "name": "Shape 3",
+          "ioValue": null
+        }
+      ]
+    },
+    {
+      "atomType": "Move",
+      "x": 0.40372670807453415,
+      "y": 0.5873493975903614,
+      "uniqueID": "id-25",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "xDist",
+          "ioValue": 0
+        },
+        {
+          "name": "yDist",
+          "ioValue": 20,
+          "currentEquation": "20"
+        },
+        {
+          "name": "zDist",
+          "ioValue": 0
+        }
+      ]
+    },
+    {
+      "atomType": "Move",
+      "x": 0.3708961845607809,
+      "y": 0.7168674698795181,
+      "uniqueID": "id-31",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "xDist",
+          "ioValue": 0
+        },
+        {
+          "name": "yDist",
+          "ioValue": 40,
+          "currentEquation": "40"
+        },
+        {
+          "name": "zDist",
+          "ioValue": 0
+        }
+      ]
     }
   ],
-  "allConnectors": [],
+  "allConnectors": [
+    {
+      "ap2Name": "geometry",
+      "ap1ID": "id-13",
+      "ap2ID": "id-17"
+    },
+    {
+      "ap2Name": "Shape 1",
+      "ap1ID": "id-17",
+      "ap2ID": "id-21"
+    },
+    {
+      "ap2Name": "geometry",
+      "ap1ID": "id-17",
+      "ap2ID": "id-25"
+    },
+    {
+      "ap2Name": "geometry",
+      "ap1ID": "id-17",
+      "ap2ID": "id-31"
+    },
+    {
+      "ap2Name": "assembly",
+      "ap1ID": "id-21",
+      "ap2ID": "id-7"
+    },
+    {
+      "ap2Name": "Shape 2",
+      "ap1ID": "id-25",
+      "ap2ID": "id-21"
+    },
+    {
+      "ap2Name": "Shape 3",
+      "ap1ID": "id-31",
+      "ap2ID": "id-21"
+    }
+  ],
   "unitsKey": "Unitless",
   "fileTypeVersion": 1,
   "filetypeVersion": 1
