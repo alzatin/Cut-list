@@ -33,8 +33,8 @@
     },
     {
       "atomType": "Code",
-      "x": 0.7023529411764705,
-      "y": 0.3885542168674699,
+      "x": 0.7520408163265306,
+      "y": 0.3674698795180723,
       "uniqueID": "id-7",
       "ioValues": [
         {
@@ -151,8 +151,8 @@
     },
     {
       "atomType": "Readme",
-      "x": 0.7950310559006211,
-      "y": 0.6656626506024096,
+      "x": 0.8918367346938776,
+      "y": 0.6445783132530121,
       "uniqueID": "id-41",
       "name": "README",
       "ioValues": [
@@ -172,20 +172,18 @@
       "ioValues": [
         {
           "name": "x length",
-          "ioValue": 100,
-          "currentEquation": "100"
+          "ioValue": 100
         },
         {
           "name": "y length",
-          "ioValue": 100,
-          "currentEquation": "100"
+          "ioValue": 100
         }
       ]
     },
     {
       "atomType": "Extrude",
-      "x": 0.4835294117647059,
-      "y": 0.6897590361445783,
+      "x": 0.4530612244897959,
+      "y": 0.6867469879518072,
       "uniqueID": "id-84",
       "ioValues": [
         {
@@ -194,8 +192,7 @@
         },
         {
           "name": "height",
-          "ioValue": 10,
-          "currentEquation": "10"
+          "ioValue": 10
         }
       ]
     },
@@ -226,13 +223,11 @@
         },
         {
           "name": "xDist",
-          "ioValue": 20,
-          "currentEquation": "20"
+          "ioValue": 20
         },
         {
           "name": "yDist",
-          "ioValue": -300,
-          "currentEquation": "-300"
+          "ioValue": -300
         },
         {
           "name": "zDist",
@@ -242,8 +237,8 @@
     },
     {
       "atomType": "Assembly",
-      "x": 0.6505882352941176,
-      "y": 0.7921686746987953,
+      "x": 0.5755102040816327,
+      "y": 0.45180722891566266,
       "uniqueID": "id-100",
       "ioValues": [
         {
