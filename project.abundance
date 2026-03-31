@@ -27,7 +27,7 @@
     {
       "atomType": "Input",
       "x": 0.025384615384615384,
-      "y": 0.33433734939759036,
+      "y": 0.15384615384615385,
       "uniqueID": "id-4",
       "name": "Parts"
     },
@@ -53,8 +53,7 @@
       "ioValues": [
         {
           "name": "x length",
-          "ioValue": 50,
-          "currentEquation": "50"
+          "ioValue": 50
         },
         {
           "name": "y length",
@@ -74,15 +73,14 @@
         },
         {
           "name": "height",
-          "ioValue": 1,
-          "currentEquation": "1"
+          "ioValue": 1
         }
       ]
     },
     {
       "atomType": "Assembly",
       "x": 0.5412599822537711,
-      "y": 0.3433734939759036,
+      "y": 0.35240963855421686,
       "uniqueID": "id-21",
       "ioValues": [
         {
@@ -115,8 +113,7 @@
         },
         {
           "name": "yDist",
-          "ioValue": 20,
-          "currentEquation": "20"
+          "ioValue": 20
         },
         {
           "name": "zDist",
@@ -140,8 +137,7 @@
         },
         {
           "name": "yDist",
-          "ioValue": 40,
-          "currentEquation": "40"
+          "ioValue": 40
         },
         {
           "name": "zDist",
