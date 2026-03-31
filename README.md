@@ -8,11 +8,9 @@
 
  Readme text here
 
-**Value:** | Part | Dimensions (X x Y x Z) |
-|------|------------------------|
-| Part 1 | 50.00 x 10.00 x 1.00 |
-| Part 2 | 50.00 x 10.00 x 1.00 |
-| Part 3 | 50.00 x 10.00 x 1.00 |
+**Value:** | Dimensions (X x Y x Z) | Quantity |
+|------------------------|----------|
+| 50.00 x 10.00 x 1.00 | 3 |
 
 
 
