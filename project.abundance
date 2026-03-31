@@ -33,17 +33,17 @@
     },
     {
       "atomType": "Code",
-      "x": 0.6024844720496894,
-      "y": 0.5813253012048193,
+      "x": 0.642413487133984,
+      "y": 0.5542168674698795,
       "uniqueID": "id-7",
       "ioValues": [
         {
-          "name": "assembly",
+          "name": "parts",
           "ioValue": "__GEOMETRY_INPUT__"
         }
       ],
       "codeVersion": 1,
-      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"assembly\", type: \"geometry\", defaultValue: null },\n];\n\nconsole.log(library[assemble])\n\nlet importedShape = library[shape];\nlet newPlane = replicad.makePlane()\nlet circDraw = replicad.drawCircle(radius)\nlet sketchCir = circDraw.sketchOnPlane(newPlane)\nlet cyl = sketchCir.extrude(height)\nlet cylObj = {\n  geometry: [cyl],\n  dimension: \"3D\",\n  tags: [\"createdCylinder\"],\n  color: \"#A3CE5B\",\n  plane: null,\n  bom: []\n};\n\nlet assembly = await Assembly([importedShape, cylObj]);\nreturn assembly;\n"
+      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"parts\", type: \"geometry\", defaultValue: null },\n];\nlet radius = 4\nlet height = 7\n\nlet importedShape = library[parts];\nconsole.log(\"assembly\", importedShape)\nlet importedShapesGeometries =importedShape.geometry\n//traverse through the top level of geometry of the assembly \nimportedShapesGeometries.forEach((item) => {\n  console.log(item)\n})\n\n\nlet newPlane = replicad.makePlane()\nlet circDraw = replicad.drawCircle(radius)\nlet sketchCir = circDraw.sketchOnPlane(newPlane)\nlet cyl = sketchCir.extrude(height)\nlet cylObj = {\n  geometry: [cyl],\n  dimension: \"3D\",\n  tags: [\"createdCylinder\"],\n  color: \"#A3CE5B\",\n  plane: null,\n  bom: []\n};\n\nlet assembly = await Assembly([importedShape, cylObj]);\nreturn assembly;\n"
     },
     {
       "atomType": "Rectangle",
@@ -81,8 +81,8 @@
     },
     {
       "atomType": "Assembly",
-      "x": 0.5359361135758651,
-      "y": 0.3253012048192771,
+      "x": 0.5412599822537711,
+      "y": 0.3433734939759036,
       "uniqueID": "id-21",
       "ioValues": [
         {
@@ -172,7 +172,7 @@
       "ap2ID": "id-31"
     },
     {
-      "ap2Name": "assembly",
+      "ap2Name": "parts",
       "ap1ID": "id-21",
       "ap2ID": "id-7"
     },
