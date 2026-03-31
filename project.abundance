@@ -33,8 +33,8 @@
     },
     {
       "atomType": "Code",
-      "x": 0.769299023957409,
-      "y": 0.2439759036144578,
+      "x": 0.7023529411764705,
+      "y": 0.391566265060241,
       "uniqueID": "id-7",
       "ioValues": [
         {
@@ -83,8 +83,8 @@
     },
     {
       "atomType": "Assembly",
-      "x": 0.6805678793256433,
-      "y": 0.3614457831325301,
+      "x": 0.5352941176470588,
+      "y": 0.1957831325301205,
       "uniqueID": "id-21",
       "ioValues": [
         {
@@ -170,8 +170,8 @@
     },
     {
       "atomType": "Rectangle",
-      "x": 0.4141176470588236,
-      "y": 0.9126506024096386,
+      "x": 0.27176470588235296,
+      "y": 0.9036144578313253,
       "uniqueID": "id-74",
       "ioValues": [
         {
@@ -188,8 +188,8 @@
     },
     {
       "atomType": "Extrude",
-      "x": 0.5670588235294117,
-      "y": 0.7108433734939759,
+      "x": 0.4835294117647059,
+      "y": 0.6897590361445783,
       "uniqueID": "id-84",
       "ioValues": [
         {
@@ -220,8 +220,8 @@
     },
     {
       "atomType": "Move",
-      "x": 0.5776470588235294,
-      "y": 0.8373493975903615,
+      "x": 0.5741176470588235,
+      "y": 0.8674698795180724,
       "uniqueID": "id-93",
       "ioValues": [
         {
@@ -241,6 +241,22 @@
         {
           "name": "zDist",
           "ioValue": 0
+        }
+      ]
+    },
+    {
+      "atomType": "Assembly",
+      "x": 0.6505882352941176,
+      "y": 0.7921686746987953,
+      "uniqueID": "id-100",
+      "ioValues": [
+        {
+          "name": "Shape 1",
+          "ioValue": null
+        },
+        {
+          "name": "Shape 2",
+          "ioValue": null
         }
       ]
     }
@@ -272,11 +288,6 @@
       "ap2ID": "id-90"
     },
     {
-      "ap2Name": "partAssembly",
-      "ap1ID": "id-21",
-      "ap2ID": "id-7"
-    },
-    {
       "ap2Name": "Shape 2",
       "ap1ID": "id-25",
       "ap2ID": "id-21"
@@ -302,6 +313,11 @@
       "ap2ID": "id-7"
     },
     {
+      "ap2Name": "Shape 2",
+      "ap1ID": "id-84",
+      "ap2ID": "id-100"
+    },
+    {
       "ap2Name": "Shape 1",
       "ap1ID": "id-90",
       "ap2ID": "id-21"
@@ -310,6 +326,16 @@
       "ap2Name": "Shape 4",
       "ap1ID": "id-93",
       "ap2ID": "id-21"
+    },
+    {
+      "ap2Name": "Shape 1",
+      "ap1ID": "id-93",
+      "ap2ID": "id-100"
+    },
+    {
+      "ap2Name": "partAssembly",
+      "ap1ID": "id-100",
+      "ap2ID": "id-7"
     }
   ],
   "unitsKey": "Unitless",
