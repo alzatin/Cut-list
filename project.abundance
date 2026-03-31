@@ -40,15 +40,19 @@
         {
           "name": "partAssembly",
           "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "shape",
+          "ioValue": "__GEOMETRY_INPUT__"
         }
       ],
       "codeVersion": 1,
-      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"partAssembly\", type: \"geometry\", defaultValue: null },\n];\n\n\nlet importedShape = library[partAssembly];\nconsole.log(\"assembly\", importedShape)\nlet parts = importedShape.geometry\n//traverse through the top level of geometry of the assembly \n\nconst partBounds = [];\n  for (let part of parts) {\n    const boundsObj = await GetBounds(part);\n    const bounds = boundsObj // GetBounds returns AbundanceObject with bounds in geometry\n    \n    if (bounds) {\n      partBounds.push({\n        part: part,\n        bounds: bounds,\n      });\n    }\n  }\nreturn generateGroupedCutList(partBounds, \"table\");\n \n//return generateSimpleCutList(partBounds, \"table\");\n\n\nfunction generateSimpleCutList(partBounds, format) {\n  if (format === \"table\") {\n    let table = \"| Part | Dimensions (X x Y x Z) |\\n|------|------------------------|\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const x = bounds.max[0] - bounds.min[0];\n      const y = bounds.max[1] - bounds.min[1];\n      const z = bounds.max[2] - bounds.min[2];\n      const dims = `${x.toFixed(2)} x ${y.toFixed(2)} x ${z.toFixed(2)}`;\n      table += `| Part ${idx + 1} | ${dims} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List:\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const x = bounds.max[0] - bounds.min[0];\n      const y = bounds.max[1] - bounds.min[1];\n      const z = bounds.max[2] - bounds.min[2];\n      const dims = `${x.toFixed(2)} x ${y.toFixed(2)} x ${z.toFixed(2)}`;\n      list += `- Part ${idx + 1}: ${dims}\\n`;\n    });\n    return list;\n  }\n}\nfunction generateGroupedCutList(partBounds, format) {\n  const grouped = {};\n  partBounds.forEach((item) => {\n    const bounds = item.bounds;\n    const x = bounds.max[0] - bounds.min[0];\n    const y = bounds.max[1] - bounds.min[1];\n    const z = bounds.max[2] - bounds.min[2];\n    // Use 4 decimal places instead of 2 to preserve actual differences\n    const dims = `${x.toFixed(4)} x ${y.toFixed(4)} x ${z.toFixed(4)}`;\n    grouped[dims] = (grouped[dims] || 0) + 1;\n  });\n\n  if (format === \"table\") {\n    let table = \"| Dimensions (X x Y x Z) | Quantity |\\n|------------------------|----------|\\n\";\n    Object.entries(grouped).forEach(([dims, qty]) => {\n      table += `| ${dims} | ${qty} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List (Grouped):\\n\";\n    Object.entries(grouped).forEach(([dims, qty]) => {\n      list += `- ${dims}: ${qty} pieces\\n`;\n    });\n    return list;\n  }\n}\n\n"
+      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"partAssembly\", type: \"geometry\", defaultValue: null },\n  { inputName: \"shape\", type: \"geometry\", defaultValue: null },\n];\n\n\nlet importedShape = library[partAssembly];\nconsole.log(\"assembly\", importedShape)\n\nconsole.log( \"shape\", await GetBounds(library[shape]))\nlet parts = importedShape.geometry\n//traverse through the top level of geometry of the assembly \n\nconst partBounds = [];\n  for (let part of parts) {\n    const boundsObj = await GetBounds(part);\n    const bounds = boundsObj // GetBounds returns AbundanceObject with bounds in geometry\n    console.log(\"object bounds\", bounds)\n    if (bounds) {\n      partBounds.push({\n        part: part,\n        bounds: bounds,\n      });\n    }\n  }\nreturn generateGroupedCutList(partBounds, \"table\");\n \n//return generateSimpleCutList(partBounds, \"table\");\n\n\nfunction generateSimpleCutList(partBounds, format) {\n  if (format === \"table\") {\n    let table = \"| Part | Dimensions (X x Y x Z) |\\n|------|------------------------|\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const x = bounds.max[0] - bounds.min[0];\n      const y = bounds.max[1] - bounds.min[1];\n      const z = bounds.max[2] - bounds.min[2];\n      const dims = `${x.toFixed(2)} x ${y.toFixed(2)} x ${z.toFixed(2)}`;\n      table += `| Part ${idx + 1} | ${dims} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List:\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const x = bounds.max[0] - bounds.min[0];\n      const y = bounds.max[1] - bounds.min[1];\n      const z = bounds.max[2] - bounds.min[2];\n      const dims = `${x.toFixed(2)} x ${y.toFixed(2)} x ${z.toFixed(2)}`;\n      list += `- Part ${idx + 1}: ${dims}\\n`;\n    });\n    return list;\n  }\n}\nfunction generateGroupedCutList(partBounds, format) {\n  console.log(partBounds)\n  const grouped = {};\n  partBounds.forEach((item) => {\n    const bounds = item.bounds;\n    const x = bounds.max[0] - bounds.min[0];\n    const y = bounds.max[1] - bounds.min[1];\n    const z = bounds.max[2] - bounds.min[2];\n    // Use 4 decimal places instead of 2 to preserve actual differences\n    const dims = `${x.toFixed(4)} x ${y.toFixed(4)} x ${z.toFixed(4)}`;\n    grouped[dims] = (grouped[dims] || 0) + 1;\n  });\n\n  if (format === \"table\") {\n    let table = \"| Dimensions (X x Y x Z) | Quantity |\\n|------------------------|----------|\\n\";\n    Object.entries(grouped).forEach(([dims, qty]) => {\n      table += `| ${dims} | ${qty} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List (Grouped):\\n\";\n    Object.entries(grouped).forEach(([dims, qty]) => {\n      list += `- ${dims}: ${qty} pieces\\n`;\n    });\n    return list;\n  }\n}\n\n"
     },
     {
       "atomType": "Rectangle",
-      "x": 0.21472937000887313,
-      "y": 0.3192771084337349,
+      "x": 0.18470588235294116,
+      "y": 0.4608433734939759,
       "uniqueID": "id-13",
       "ioValues": [
         {
@@ -63,8 +67,8 @@
     },
     {
       "atomType": "Extrude",
-      "x": 0.3132209405501331,
-      "y": 0.3765060240963855,
+      "x": 0.31411764705882356,
+      "y": 0.3674698795180723,
       "uniqueID": "id-17",
       "ioValues": [
         {
@@ -166,25 +170,26 @@
     },
     {
       "atomType": "Rectangle",
-      "x": 0.41881100266193433,
+      "x": 0.4141176470588236,
       "y": 0.9126506024096386,
       "uniqueID": "id-74",
       "ioValues": [
         {
           "name": "x length",
-          "ioValue": 39,
-          "currentEquation": "39"
+          "ioValue": 100,
+          "currentEquation": "100"
         },
         {
           "name": "y length",
-          "ioValue": 10
+          "ioValue": 100,
+          "currentEquation": "100"
         }
       ]
     },
     {
       "atomType": "Extrude",
-      "x": 0.48181011535048807,
-      "y": 0.7439759036144579,
+      "x": 0.5670588235294117,
+      "y": 0.7108433734939759,
       "uniqueID": "id-84",
       "ioValues": [
         {
@@ -215,8 +220,8 @@
     },
     {
       "atomType": "Move",
-      "x": 0.5696539485359361,
-      "y": 0.8614457831325302,
+      "x": 0.5776470588235294,
+      "y": 0.8373493975903615,
       "uniqueID": "id-93",
       "ioValues": [
         {
@@ -230,8 +235,8 @@
         },
         {
           "name": "yDist",
-          "ioValue": -30,
-          "currentEquation": "-30"
+          "ioValue": -300,
+          "currentEquation": "-300"
         },
         {
           "name": "zDist",
@@ -290,6 +295,11 @@
       "ap2Name": "geometry",
       "ap1ID": "id-84",
       "ap2ID": "id-93"
+    },
+    {
+      "ap2Name": "shape",
+      "ap1ID": "id-84",
+      "ap2ID": "id-7"
     },
     {
       "ap2Name": "Shape 1",
