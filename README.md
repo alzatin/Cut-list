@@ -13,10 +13,7 @@
 
  Readme text here
 
-**Value:** | Dimensions (X x Y x Z) | Quantity |
-|------------------------|----------|
-| 100.0000 x 100.0000 x 10.0000 | 2 |
-
+**Value:** No valid geometries found in assembly.
 
 
 
