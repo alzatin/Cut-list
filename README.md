@@ -22,7 +22,11 @@
 
 Cutlist 2
 
-**Value:** No valid geometries found in assembly.
+**Value:** | Dimensions (X × Y × Z) | Quantity |
+|------------------------|----------|
+| 85.00 × 7.00 × 1.00 mm | 1 |
+
+**Total Parts:** 1
 
 
 
