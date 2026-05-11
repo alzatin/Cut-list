@@ -4,6 +4,11 @@
 
 ![](/project.svg)
 
+## Inputs
+
+- **Parts** (number)
+
+
 
 
  Readme text here
