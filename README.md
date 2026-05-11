@@ -6,28 +6,12 @@
 
 ## Inputs
 
-- **Parts** (number)
+- **Parts** (geometry)
 
 
 
 
  CUTLIST
-
-**Value:** | Dimensions (X × Y × Z) | Quantity |
-|------------------------|----------|
-| 85.00 × 7.00 × 1.00 mm | 3 |
-| 100.00 × 100.00 × 20.00 mm | 1 |
-
-**Total Parts:** 4
-
-Cutlist 2
-
-**Value:** | Dimensions (X × Y × Z) | Quantity |
-|------------------------|----------|
-| 85.00 × 7.00 × 1.00 mm | 3 |
-| 100.00 × 100.00 × 20.00 mm | 2 |
-
-**Total Parts:** 5
 
 
 
