@@ -32,20 +32,6 @@
       "name": "Parts"
     },
     {
-      "atomType": "Code",
-      "x": 0.8027444253859348,
-      "y": 0.24085365853658536,
-      "uniqueID": "id-7",
-      "ioValues": [
-        {
-          "name": "partAssembly",
-          "ioValue": "__GEOMETRY_INPUT__"
-        }
-      ],
-      "interpreterVersion": 0,
-      "code": "\n// Example Code\nconst Inputs = [\n  { inputName: \"partAssembly\", type: \"geometry\", defaultValue: null }\n];\n\nconsole.log(partAssembly)\nlet importedShape = library[partAssembly];\n\nlet parts = await AssemblyAsIterable( library[partAssembly]); // Flattens to individual leaves\nconsole.log(\"itrable\",parts)\n\n//traverse through the top level of geometry of the assembly \n\nconst partBounds = [];\n  for (let part of parts) {\n     console.log('part', part)\n    const boundsObj = await GetBounds(part);\n    const bounds = boundsObj // GetBounds returns AbundanceObject with bounds in geometry\n    console.log(\"object bounds\", bounds)\n    if (bounds) {\n      partBounds.push({\n        part: part,\n        bounds: bounds,\n      });\n    }\n  }\nreturn generateGroupedCutList(partBounds, \"table\");\n \n//return generateSimpleCutList(partBounds, \"table\");\n\n\nfunction generateSimpleCutList(partBounds, format) {\n  if (format === \"table\") {\n    let table = \"| Part | Dimensions (X x Y x Z) |\\n|------|------------------------|\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const x = bounds.max[0] - bounds.min[0];\n      const y = bounds.max[1] - bounds.min[1];\n      const z = bounds.max[2] - bounds.min[2];\n      const dims = `${x.toFixed(2)} x ${y.toFixed(2)} x ${z.toFixed(2)}`;\n      table += `| Part ${idx + 1} | ${dims} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List:\\n\";\n    partBounds.forEach((item, idx) => {\n      const bounds = item.bounds;\n      const x = bounds.max[0] - bounds.min[0];\n      const y = bounds.max[1] - bounds.min[1];\n      const z = bounds.max[2] - bounds.min[2];\n      const dims = `${x.toFixed(2)} x ${y.toFixed(2)} x ${z.toFixed(2)}`;\n      list += `- Part ${idx + 1}: ${dims}\\n`;\n    });\n    return list;\n  }\n}\nfunction generateGroupedCutList(partBounds, format) {\n  console.log(partBounds)\n  const grouped = {};\n  partBounds.forEach((item) => {\n    const bounds = item.bounds;\n    const x = bounds.max[0] - bounds.min[0];\n    const y = bounds.max[1] - bounds.min[1];\n    const z = bounds.max[2] - bounds.min[2];\n    // Use 4 decimal places instead of 2 to preserve actual differences\n    const dims = `${x.toFixed(4)} x ${y.toFixed(4)} x ${z.toFixed(4)}`;\n    grouped[dims] = (grouped[dims] || 0) + 1;\n  });\n\n  if (format === \"table\") {\n    let table = \"| Dimensions (X x Y x Z) | Quantity |\\n|------------------------|----------|\\n\";\n    Object.entries(grouped).forEach(([dims, qty]) => {\n      table += `| ${dims} | ${qty} |\\n`;\n    });\n    console.log(table)\n    return table;\n  } else {\n    let list = \"Cut List (Grouped):\\n\";\n    Object.entries(grouped).forEach(([dims, qty]) => {\n      list += `- ${dims}: ${qty} pieces\\n`;\n    });\n    return list;\n  }\n}\n\n"
-    },
-    {
       "atomType": "Rectangle",
       "x": 0.11749571183533448,
       "y": 0.48780487804878053,
@@ -81,8 +67,8 @@
     },
     {
       "atomType": "Assembly",
-      "x": 0.5351629502572899,
-      "y": 0.18597560975609756,
+      "x": 0.5437392795883362,
+      "y": 0.3079268292682927,
       "uniqueID": "id-21",
       "ioValues": [
         {
@@ -215,8 +201,8 @@
     },
     {
       "atomType": "Move",
-      "x": 0.5013531799729364,
-      "y": 0.8201219512195123,
+      "x": 0.4502572898799314,
+      "y": 0.7865853658536585,
       "uniqueID": "id-93",
       "ioValues": [
         {
@@ -238,25 +224,9 @@
       ]
     },
     {
-      "atomType": "Assembly",
-      "x": 0.6132075471698113,
-      "y": 0.7804878048780488,
-      "uniqueID": "id-100",
-      "ioValues": [
-        {
-          "name": "Shape 1",
-          "ioValue": null
-        },
-        {
-          "name": "Shape 2",
-          "ioValue": null
-        }
-      ]
-    },
-    {
       "atomType": "Code",
-      "x": 0.6560891938250429,
-      "y": 0.4573170731707317,
+      "x": 0.7298456260720412,
+      "y": 0.42987804878048785,
       "uniqueID": "id-206",
       "ioValues": [
         {
@@ -277,6 +247,53 @@
       "interpreterVersion": 1,
       "code": "/**\n * Generates a cut list from all geometries in an assembly,\n * grouped by dimension and quantity.\n */\nfunction run(\n  partAssembly: Assembly | Assembly[] | undefined = undefined,\n  roundTo: number = 2,\n  sortBy: string = \"quantity\",\n): string {\n  if (!partAssembly) {\n    return \"No assembly connected. Please connect a geometry input.\";\n  }\n\n  // Normalize input to array\n  const assemblies = Array.isArray(partAssembly)\n    ? partAssembly\n    : [partAssembly];\n  // Extract all individual parts with their bounds\n  const grouped: Record<string, number> = {};\n  console.log(assemblies[0].geometry)\n  assemblies[0].geometry.forEach((assembly) => {\n    if (!assembly || !assembly.geometry) return;\n\n    try {\n      // Access boundingBox property on the geometry\n      console.log(assembly.geometry)\n      const bbox = assembly.geometry.boundingBox;\n      if (!bbox || !bbox.bounds) {\n        console.warn(\"No bounding box found for part\");\n        return;\n      }\n\n      // Extract dimensions from bounds\n      const minPoint = bbox.bounds[0];\n      const maxPoint = bbox.bounds[1];\n\n      const x = Math.abs(maxPoint[0] - minPoint[0]);\n      const y = Math.abs(maxPoint[1] - minPoint[1]);\n      const z = Math.abs(maxPoint[2] - minPoint[2]);\n\n      // Sort dimensions for consistency\n      const dims = [x, y, z]\n        .sort((a, b) => b - a)\n        .map((d) => d.toFixed(roundTo))\n        .join(\" × \");\n\n      grouped[dims] = (grouped[dims] || 0) + 1;\n    } catch (e) {\n      console.warn(\"Could not extract bounds for part:\", e);\n    }\n  });\n\n  if (Object.keys(grouped).length === 0) {\n    return \"No valid geometries found in assembly.\";\n  }\n\n  // Sort results\n  const sorted = Object.entries(grouped).sort((a, b) => {\n    if (sortBy === \"quantity\") {\n      return b[1] - a[1]; // Most common first\n    } else {\n      return a[0].localeCompare(b[0]); // Alphabetical\n    }\n  });\n\n  // Generate markdown table\n  let table =\n    \"| Dimensions (X × Y × Z) | Quantity |\\n|------------------------|----------|\\n\";\n  let totalParts = 0;\n\n  sorted.forEach(([dims, qty]) => {\n    table += `| ${dims} mm | ${qty} |\\n`;\n    totalParts += qty;\n  });\n\n  table += `\\n**Total Parts:** ${totalParts}`;\n  console.log(table)\n  return table;\n}",
       "compiledCode": "\"use strict\";\n/**\n * Generates a cut list from all geometries in an assembly,\n * grouped by dimension and quantity.\n */\nfunction run(partAssembly = undefined, roundTo = 2, sortBy = \"quantity\") {\n    if (!partAssembly) {\n        return \"No assembly connected. Please connect a geometry input.\";\n    }\n    // Normalize input to array\n    const assemblies = Array.isArray(partAssembly)\n        ? partAssembly\n        : [partAssembly];\n    // Extract all individual parts with their bounds\n    const grouped = {};\n    console.log(assemblies[0].geometry);\n    assemblies[0].geometry.forEach((assembly) => {\n        if (!assembly || !assembly.geometry)\n            return;\n        try {\n            // Access boundingBox property on the geometry\n            console.log(assembly.geometry);\n            const bbox = assembly.geometry.boundingBox;\n            if (!bbox || !bbox.bounds) {\n                console.warn(\"No bounding box found for part\");\n                return;\n            }\n            // Extract dimensions from bounds\n            const minPoint = bbox.bounds[0];\n            const maxPoint = bbox.bounds[1];\n            const x = Math.abs(maxPoint[0] - minPoint[0]);\n            const y = Math.abs(maxPoint[1] - minPoint[1]);\n            const z = Math.abs(maxPoint[2] - minPoint[2]);\n            // Sort dimensions for consistency\n            const dims = [x, y, z]\n                .sort((a, b) => b - a)\n                .map((d) => d.toFixed(roundTo))\n                .join(\" × \");\n            grouped[dims] = (grouped[dims] || 0) + 1;\n        }\n        catch (e) {\n            console.warn(\"Could not extract bounds for part:\", e);\n        }\n    });\n    if (Object.keys(grouped).length === 0) {\n        return \"No valid geometries found in assembly.\";\n    }\n    // Sort results\n    const sorted = Object.entries(grouped).sort((a, b) => {\n        if (sortBy === \"quantity\") {\n            return b[1] - a[1]; // Most common first\n        }\n        else {\n            return a[0].localeCompare(b[0]); // Alphabetical\n        }\n    });\n    // Generate markdown table\n    let table = \"| Dimensions (X × Y × Z) | Quantity |\\n|------------------------|----------|\\n\";\n    let totalParts = 0;\n    sorted.forEach(([dims, qty]) => {\n        table += `| ${dims} mm | ${qty} |\\n`;\n        totalParts += qty;\n    });\n    table += `\\n**Total Parts:** ${totalParts}`;\n    console.log(table);\n    return table;\n}\n"
+    },
+    {
+      "atomType": "Assembly",
+      "x": 0.5694682675814751,
+      "y": 0.5792682926829268,
+      "uniqueID": "id-219",
+      "ioValues": [
+        {
+          "name": "Shape 1",
+          "ioValue": null
+        }
+      ]
+    },
+    {
+      "atomType": "Code",
+      "x": 0.6397941680960549,
+      "y": 0.771341463414634,
+      "uniqueID": "id-223",
+      "ioValues": [
+        {
+          "name": "width",
+          "ioValue": 40
+        },
+        {
+          "name": "depth",
+          "ioValue": 30
+        },
+        {
+          "name": "thickness",
+          "ioValue": 5
+        },
+        {
+          "name": "holeRadius",
+          "ioValue": 6
+        },
+        {
+          "name": "color",
+          "ioValue": "#5B9BD5",
+          "currentEquation": "#5B9BD5"
+        },
+        {
+          "name": "extra",
+          "ioValue": "__GEOMETRY_INPUT__"
+        }
+      ],
+      "interpreterVersion": 1,
+      "code": "\n/**\n * =========================================================================\n *  ABUNDANCE CODE ATOM — Quick Reference\n * =========================================================================\n *\n *  HOW INPUTS WORK\n *  ---------------\n *  Every parameter of run() becomes an input port on this atom.\n *  Four types are supported:\n *\n *    number   -> numeric input / slider\n *    string   -> text input  (great for hex color codes, labels, etc.)\n *    boolean  -> true/false toggle\n *    Assembly -> geometry -- wire this to the output of another atom\n *\n *  Give a parameter a default value ( = x ) to make it optional.\n *  Mark it with ? (name?: Assembly) to make it optional with no default.\n *  Parameters without a default must be connected before the atom runs.\n *\n *  RETURN VALUE\n *  ------------\n *  Return an Assembly, an Assembly[], or a primitive (number/string/boolean).\n *  Returning an Assembly[] lets downstream atoms (BOM, cut layout...)\n *  see each piece independently.\n *\n *  GEOMETRY API  (replicad is available as a global)\n *  -------------------------------------------------\n *  Create 2-D sketches\n *    replicad.drawCircle(radius)\n *    replicad.drawRectangle(width, height)\n *    replicad.drawRoundedRectangle(width, height, cornerRadius)\n *\n *  Turn a 2-D sketch into a 3-D solid\n *    sketch.sketchOnPlane().extrude(distance)\n *    sketch.sketchOnPlane().revolve()          // rotate 360 deg around Z\n *\n *  Create 3-D primitives directly\n *    replicad.makeBaseBox(width, depth, height)\n *    replicad.makeSphere(radius)\n *    replicad.makeCylinder(radius, height)\n *\n *  Boolean operations\n *    solidA.fuse(solidB)                       // union\n *    solidA.cut(solidB)                        // difference (cut a hole)\n *    solidA.intersect(solidB)                  // intersection\n *\n *  Post-processing\n *    solid.fillet(radius)                      // round ALL edges\n *    solid.fillet(r, e => e.inPlane(\"XY\", z))  // round only top-face edges\n *    solid.chamfer(distance)                   // bevel ALL edges\n *    solid.translate(x, y, z)                  // move the solid\n *    solid.rotate(angle, [0, 0, 1])            // rotate around Z axis\n *\n *  ASSEMBLY CLASS\n *  --------------\n *  Wrap any replicad solid in an Assembly to attach display metadata:\n *    new Assembly({ geometry, color, tags, bom })\n *      geometry -> replicad solid / drawing returned by the API above\n *      color    -> hex string shown in the 3-D viewport  (\"#A3CE5B\")\n *      tags     -> string[] used for filtering in cut layout / BOM\n *      bom      -> string[] lines added to the Bill of Materials panel\n *\n *  AI PROMPT TIP\n *  -------------\n *  Copy the code in this editor into ChatGPT / Claude and say something like:\n *    \"Modify this Abundance Code Atom to create a gear with 12 teeth\"\n *    \"Change this to make a hexagonal nut instead of a round plate\"\n *  The comments above give the AI all the context it needs to produce\n *  valid, working Abundance TypeScript code.\n * =========================================================================\n */\n\n/**\n * A rectangular mounting plate with a circular hole in the centre.\n * All parameters have defaults so the atom produces geometry immediately\n * after creation — no connections required to get started.\n */\nfunction run(\n  width: number = 40,        \n  depth: number = 30,       \n  thickness: number = 5,    \n  holeRadius: number = 6,   \n  color: string = \"#5B9BD5\", \n  addFillet: boolean = true, \n  extra?: Assembly           \n) {\n  // ── Step 1: Create the base solid ────────────────────────────────────────\n  // makeBaseBox(width, depth, height) places a box with one corner at the\n  // origin.  Translate it so the hole will be centred at (0, 0).\n  let plate = replicad\n    .makeBaseBox(width, depth, thickness)\n    .translate(-width / 2, -depth / 2, 0);\n\n  // ── Step 2: Cut a through-hole in the centre ──────────────────────────────\n  // Extrude a circle slightly taller than the plate so the cut goes all the\n  // way through.  Start 1 mm below the bottom face to avoid coplanar issues.\n  const holeCutter = replicad\n    .drawCircle(holeRadius)\n    .sketchOnPlane()\n    .extrude(thickness + 2)\n    .translate(0, 0, -1);\n\n  plate = plate.cut(holeCutter);\n\n  // ── Step 3: Optional fillet on the top-face edges ────────────────────────\n  // inPlane(\"XY\", thickness) selects only the edges that lie in the\n  // horizontal plane at z = thickness (i.e. the top face of the plate).\n  if (addFillet) {\n    plate = plate.fillet(1.5, (e) => e.inPlane(\"XY\", thickness));\n  }\n\n  // ── Step 4: Wrap in an Assembly to set display properties ─────────────────\n  const plateAssembly = new Assembly({\n    geometry: plate,\n    color: color,\n    tags: [\"plate\", \"mounting-plate\"],\n    bom: [`Mounting plate ${width}×${depth}×${thickness} mm`],\n  });\n\n  // ── Step 5: Combine with any upstream geometry ────────────────────────────\n  // Returning an array lets each piece stay independent for the BOM and\n  // cut-layout atoms.  If nothing is connected, `extra` is undefined.\n  const results: Assembly[] = [plateAssembly];\n  if (extra) results.push(extra);\n  return results;\n}\n"
     }
   ],
   "allConnectors": [
@@ -301,9 +318,9 @@
       "ap2ID": "id-90"
     },
     {
-      "ap2Name": "partAssembly",
+      "ap2Name": "Shape 1",
       "ap1ID": "id-21",
-      "ap2ID": "id-206"
+      "ap2ID": "id-219"
     },
     {
       "ap2Name": "Shape 2",
@@ -326,11 +343,6 @@
       "ap2ID": "id-93"
     },
     {
-      "ap2Name": "Shape 2",
-      "ap1ID": "id-84",
-      "ap2ID": "id-100"
-    },
-    {
       "ap2Name": "Shape 1",
       "ap1ID": "id-90",
       "ap2ID": "id-21"
@@ -341,19 +353,14 @@
       "ap2ID": "id-21"
     },
     {
-      "ap2Name": "Shape 1",
-      "ap1ID": "id-93",
-      "ap2ID": "id-100"
-    },
-    {
-      "ap2Name": "partAssembly",
-      "ap1ID": "id-100",
-      "ap2ID": "id-7"
-    },
-    {
       "ap2Name": "value",
       "ap1ID": "id-206",
       "ap2ID": "id-41"
+    },
+    {
+      "ap2Name": "partAssembly",
+      "ap1ID": "id-219",
+      "ap2ID": "id-206"
     }
   ],
   "unitsKey": "Unitless",
