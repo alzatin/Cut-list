@@ -47,13 +47,14 @@
     },
     {
       "atomType": "Rectangle",
-      "x": 0.11705006765899864,
-      "y": 0.46951219512195125,
+      "x": 0.11749571183533448,
+      "y": 0.48780487804878053,
       "uniqueID": "id-13",
       "ioValues": [
         {
           "name": "x length",
-          "ioValue": 50
+          "ioValue": 85,
+          "currentEquation": "85"
         },
         {
           "name": "y length",
@@ -63,8 +64,8 @@
     },
     {
       "atomType": "Extrude",
-      "x": 0.31411764705882356,
-      "y": 0.3674698795180723,
+      "x": 0.26329331046312177,
+      "y": 0.3475609756097561,
       "uniqueID": "id-17",
       "ioValues": [
         {
@@ -79,8 +80,8 @@
     },
     {
       "atomType": "Assembly",
-      "x": 0.5358592692828146,
-      "y": 0.19817073170731708,
+      "x": 0.5351629502572899,
+      "y": 0.18597560975609756,
       "uniqueID": "id-21",
       "ioValues": [
         {
@@ -237,8 +238,8 @@
     },
     {
       "atomType": "Assembly",
-      "x": 0.5755102040816327,
-      "y": 0.45180722891566266,
+      "x": 0.6020583190394512,
+      "y": 0.9420731707317073,
       "uniqueID": "id-100",
       "ioValues": [
         {
@@ -273,8 +274,8 @@
         }
       ],
       "interpreterVersion": 1,
-      "code": "/**\n * Generates a cut list from all geometries in an assembly,\n * grouped by dimension and quantity.\n */\nfunction run(\n  partAssembly: Assembly | Assembly[] | undefined = undefined,\n  roundTo: number = 2,\n  sortBy: string = \"quantity\",\n): string {\n  if (!partAssembly) {\n    return \"No assembly connected. Please connect a geometry input.\";\n  }\n\nconsole.log(partAssembly)\n  // Normalize input to array\n  const assemblies = Array.isArray(partAssembly)\n    ? partAssembly\n    : [partAssembly];\n  console.log(assemblies.length)\n  // Extract all individual parts with their bounds\n  const grouped: Record<string, number> = {};\n\n  assemblies.forEach((assembly) => {\n    if (!assembly || !assembly.geometry) return;\n\n    try {\n      // Access boundingBox property on the geometry\n      const bbox = assembly.geometry.boundingBox;\n      if (!bbox || !bbox.bounds) {\n        console.warn(\"No bounding box found for part\");\n        return;\n      }\n\n      // Extract dimensions from bounds\n      const minPoint = bbox.bounds[0];\n      const maxPoint = bbox.bounds[1];\n\n      const x = Math.abs(maxPoint[0] - minPoint[0]);\n      const y = Math.abs(maxPoint[1] - minPoint[1]);\n      const z = Math.abs(maxPoint[2] - minPoint[2]);\n\n      // Sort dimensions for consistency\n      const dims = [x, y, z]\n        .sort((a, b) => b - a)\n        .map((d) => d.toFixed(roundTo))\n        .join(\" × \");\n\n      grouped[dims] = (grouped[dims] || 0) + 1;\n    } catch (e) {\n      console.warn(\"Could not extract bounds for part:\", e);\n    }\n  });\n\n  if (Object.keys(grouped).length === 0) {\n    return \"No valid geometries found in assembly.\";\n  }\n\n  // Sort results\n  const sorted = Object.entries(grouped).sort((a, b) => {\n    if (sortBy === \"quantity\") {\n      return b[1] - a[1]; // Most common first\n    } else {\n      return a[0].localeCompare(b[0]); // Alphabetical\n    }\n  });\n\n  // Generate markdown table\n  let table =\n    \"| Dimensions (X × Y × Z) | Quantity |\\n|------------------------|----------|\\n\";\n  let totalParts = 0;\n\n  sorted.forEach(([dims, qty]) => {\n    table += `| ${dims} mm | ${qty} |\\n`;\n    totalParts += qty;\n  });\n\n  table += `\\n**Total Parts:** ${totalParts}`;\n\n  return table;\n}",
-      "compiledCode": "\"use strict\";\n/**\n * Generates a cut list from all geometries in an assembly,\n * grouped by dimension and quantity.\n */\nfunction run(partAssembly = undefined, roundTo = 2, sortBy = \"quantity\") {\n    if (!partAssembly) {\n        return \"No assembly connected. Please connect a geometry input.\";\n    }\n    console.log(partAssembly);\n    // Normalize input to array\n    const assemblies = Array.isArray(partAssembly)\n        ? partAssembly\n        : [partAssembly];\n    console.log(assemblies.length);\n    // Extract all individual parts with their bounds\n    const grouped = {};\n    assemblies.forEach((assembly) => {\n        if (!assembly || !assembly.geometry)\n            return;\n        try {\n            // Access boundingBox property on the geometry\n            const bbox = assembly.geometry.boundingBox;\n            if (!bbox || !bbox.bounds) {\n                console.warn(\"No bounding box found for part\");\n                return;\n            }\n            // Extract dimensions from bounds\n            const minPoint = bbox.bounds[0];\n            const maxPoint = bbox.bounds[1];\n            const x = Math.abs(maxPoint[0] - minPoint[0]);\n            const y = Math.abs(maxPoint[1] - minPoint[1]);\n            const z = Math.abs(maxPoint[2] - minPoint[2]);\n            // Sort dimensions for consistency\n            const dims = [x, y, z]\n                .sort((a, b) => b - a)\n                .map((d) => d.toFixed(roundTo))\n                .join(\" × \");\n            grouped[dims] = (grouped[dims] || 0) + 1;\n        }\n        catch (e) {\n            console.warn(\"Could not extract bounds for part:\", e);\n        }\n    });\n    if (Object.keys(grouped).length === 0) {\n        return \"No valid geometries found in assembly.\";\n    }\n    // Sort results\n    const sorted = Object.entries(grouped).sort((a, b) => {\n        if (sortBy === \"quantity\") {\n            return b[1] - a[1]; // Most common first\n        }\n        else {\n            return a[0].localeCompare(b[0]); // Alphabetical\n        }\n    });\n    // Generate markdown table\n    let table = \"| Dimensions (X × Y × Z) | Quantity |\\n|------------------------|----------|\\n\";\n    let totalParts = 0;\n    sorted.forEach(([dims, qty]) => {\n        table += `| ${dims} mm | ${qty} |\\n`;\n        totalParts += qty;\n    });\n    table += `\\n**Total Parts:** ${totalParts}`;\n    return table;\n}\n"
+      "code": "/**\n * Generates a cut list from all geometries in an assembly,\n * grouped by dimension and quantity.\n */\nfunction run(\n  partAssembly: Assembly | Assembly[] | undefined = undefined,\n  roundTo: number = 2,\n  sortBy: string = \"quantity\",\n): string {\n  if (!partAssembly) {\n    return \"No assembly connected. Please connect a geometry input.\";\n  }\n\n  // Normalize input to array\n  const assemblies = Array.isArray(partAssembly)\n    ? partAssembly\n    : [partAssembly];\n  // Extract all individual parts with their bounds\n  const grouped: Record<string, number> = {};\n  console.log(assemblies[0].geometry)\n  assemblies[0].geometry.forEach((assembly) => {\n    if (!assembly || !assembly.geometry) return;\n\n    try {\n      // Access boundingBox property on the geometry\n      console.log(assembly.geometry)\n      const bbox = assembly.geometry.boundingBox;\n      if (!bbox || !bbox.bounds) {\n        console.warn(\"No bounding box found for part\");\n        return;\n      }\n\n      // Extract dimensions from bounds\n      const minPoint = bbox.bounds[0];\n      const maxPoint = bbox.bounds[1];\n\n      const x = Math.abs(maxPoint[0] - minPoint[0]);\n      const y = Math.abs(maxPoint[1] - minPoint[1]);\n      const z = Math.abs(maxPoint[2] - minPoint[2]);\n\n      // Sort dimensions for consistency\n      const dims = [x, y, z]\n        .sort((a, b) => b - a)\n        .map((d) => d.toFixed(roundTo))\n        .join(\" × \");\n\n      grouped[dims] = (grouped[dims] || 0) + 1;\n    } catch (e) {\n      console.warn(\"Could not extract bounds for part:\", e);\n    }\n  });\n\n  if (Object.keys(grouped).length === 0) {\n    return \"No valid geometries found in assembly.\";\n  }\n\n  // Sort results\n  const sorted = Object.entries(grouped).sort((a, b) => {\n    if (sortBy === \"quantity\") {\n      return b[1] - a[1]; // Most common first\n    } else {\n      return a[0].localeCompare(b[0]); // Alphabetical\n    }\n  });\n\n  // Generate markdown table\n  let table =\n    \"| Dimensions (X × Y × Z) | Quantity |\\n|------------------------|----------|\\n\";\n  let totalParts = 0;\n\n  sorted.forEach(([dims, qty]) => {\n    table += `| ${dims} mm | ${qty} |\\n`;\n    totalParts += qty;\n  });\n\n  table += `\\n**Total Parts:** ${totalParts}`;\n  console.log(table)\n  return table;\n}",
+      "compiledCode": "\"use strict\";\n/**\n * Generates a cut list from all geometries in an assembly,\n * grouped by dimension and quantity.\n */\nfunction run(partAssembly = undefined, roundTo = 2, sortBy = \"quantity\") {\n    if (!partAssembly) {\n        return \"No assembly connected. Please connect a geometry input.\";\n    }\n    // Normalize input to array\n    const assemblies = Array.isArray(partAssembly)\n        ? partAssembly\n        : [partAssembly];\n    // Extract all individual parts with their bounds\n    const grouped = {};\n    console.log(assemblies[0].geometry);\n    assemblies[0].geometry.forEach((assembly) => {\n        if (!assembly || !assembly.geometry)\n            return;\n        try {\n            // Access boundingBox property on the geometry\n            console.log(assembly.geometry);\n            const bbox = assembly.geometry.boundingBox;\n            if (!bbox || !bbox.bounds) {\n                console.warn(\"No bounding box found for part\");\n                return;\n            }\n            // Extract dimensions from bounds\n            const minPoint = bbox.bounds[0];\n            const maxPoint = bbox.bounds[1];\n            const x = Math.abs(maxPoint[0] - minPoint[0]);\n            const y = Math.abs(maxPoint[1] - minPoint[1]);\n            const z = Math.abs(maxPoint[2] - minPoint[2]);\n            // Sort dimensions for consistency\n            const dims = [x, y, z]\n                .sort((a, b) => b - a)\n                .map((d) => d.toFixed(roundTo))\n                .join(\" × \");\n            grouped[dims] = (grouped[dims] || 0) + 1;\n        }\n        catch (e) {\n            console.warn(\"Could not extract bounds for part:\", e);\n        }\n    });\n    if (Object.keys(grouped).length === 0) {\n        return \"No valid geometries found in assembly.\";\n    }\n    // Sort results\n    const sorted = Object.entries(grouped).sort((a, b) => {\n        if (sortBy === \"quantity\") {\n            return b[1] - a[1]; // Most common first\n        }\n        else {\n            return a[0].localeCompare(b[0]); // Alphabetical\n        }\n    });\n    // Generate markdown table\n    let table = \"| Dimensions (X × Y × Z) | Quantity |\\n|------------------------|----------|\\n\";\n    let totalParts = 0;\n    sorted.forEach(([dims, qty]) => {\n        table += `| ${dims} mm | ${qty} |\\n`;\n        totalParts += qty;\n    });\n    table += `\\n**Total Parts:** ${totalParts}`;\n    console.log(table);\n    return table;\n}\n"
     }
   ],
   "allConnectors": [
