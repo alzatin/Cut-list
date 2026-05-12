@@ -15,5 +15,9 @@
 
 __GEOMETRY_INPUT__
 
+CUTLIST
+
+No valid geometries found in assembly.
+
 
 

@@ -138,8 +138,8 @@
     },
     {
       "atomType": "Readme",
-      "x": 0.7615780445969125,
-      "y": 0.323170731707317,
+      "x": 0.6869639794168096,
+      "y": 0.2804878048780488,
       "uniqueID": "id-41",
       "name": "README",
       "ioValues": [
@@ -240,8 +240,8 @@
     },
     {
       "atomType": "Code",
-      "x": 0.83704974271012,
-      "y": 0.48780487804878053,
+      "x": 0.7315608919382505,
+      "y": 0.5396341463414634,
       "uniqueID": "id-223",
       "ioValues": [
         {
@@ -301,6 +301,21 @@
           "ioValue": 0
         }
       ]
+    },
+    {
+      "atomType": "Readme",
+      "x": 0.8413379073756432,
+      "y": 0.7682926829268293,
+      "uniqueID": "id-301",
+      "name": "README",
+      "ioValues": [
+        {
+          "name": "value",
+          "ioValue": "__GEOMETRY_INPUT__"
+        }
+      ],
+      "readMeText": "CUTLIST",
+      "global": true
     }
   ],
   "allConnectors": [
@@ -378,6 +393,11 @@
       "ap2Name": "number or geometry",
       "ap1ID": "id-223",
       "ap2ID": "id-2"
+    },
+    {
+      "ap2Name": "value",
+      "ap1ID": "id-223",
+      "ap2ID": "id-301"
     },
     {
       "ap2Name": "Shape 2",
