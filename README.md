@@ -13,7 +13,7 @@
 
  CUTLIST
 
-**Value:** __GEOMETRY_INPUT__
+__GEOMETRY_INPUT__
 
 
 
